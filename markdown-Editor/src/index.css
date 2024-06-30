@@ -1,0 +1,15 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+}
+
+:root{
+
+    --backgroudColor: #FFFFFF;
+    --headerColor: #E4E4E4;
+    --navbarColor: #1D1F22;
+    --textColor: #2B2D31;
+}

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const DrawerTitle = styled.h4`
   color: #5A6069;
-  margin-bottom: 30px; 
+  margin-bottom: 25px; 
 `;
 
 const DrawerButton = styled.button`

@@ -60,8 +60,8 @@ const Menu = styled.button`
 `;
 
 const NavbarTitle = styled.h1`
-  font-family: "Roboto Slab", serif;
-  font-size: 20px;
+  font-family: "Roboto", serif;
+  font-size: 17px;
   font-weight: 500;
   color: #ffffff;
   letter-spacing: 6px;

@@ -5,30 +5,46 @@ import trashIcon from '../assets/icon-delete.svg';
 import saveIcon from '../assets/icon-save.svg';
 import TrashDialog from './TrashDialog';
 import { useState } from 'react';
+import cancel from '../assets/icon-close.svg';
+import Drawer from '@mui/material/Drawer';
+import DrawerList from './DrawerList';
+
+const drawerWidth = 240; // Width of the drawer
+
+interface AppContainerProps {
+  isOpen: boolean;
+}
+
+const AppContainer = styled.div<AppContainerProps>`
+  display: grid;
+  grid-template-columns: ${props => (props.isOpen ? `${drawerWidth}px 1fr` : `0 1fr`)};
+  transition: grid-template-columns 0.3s; /* Smooth transition for grid change */
+  height: 100vh; /* Full height to cover the viewport */
+`;
 
 const NavbarContainer = styled.div`
   width: 100%;
-  height: 72px;
+  height:68px;
   background-color: var(--navbarColor);
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
 `;
 
 const NavbarContentsLeft = styled.div`
   display: flex;
-  justify-content: flex-start;
   align-items: center;
   height: 100%;
 `;
 
 const NavbarContentsRight = styled.div`
   display: flex;
-  justify-content: space-around;
   align-items: center;
 `;
 
 const MenuContainer = styled.div`
-  width: 70px;
+  width: 4.5rem;
   height: 100%;
 `;
 
@@ -37,7 +53,6 @@ const Menu = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 50%;
   border: none;
   cursor: pointer;
   height: 100%;
@@ -88,8 +103,6 @@ const TextInput = styled.input`
     outline: none; /* Remove the default focus outline */
     text-decoration: underline; /* Underline when focused */
   }
-
-  }
 `;
 
 const SaveButton = styled.button`
@@ -120,19 +133,43 @@ const TrashButton = styled.button`
   cursor: pointer;
 `;
 
+
+
 function Navbar() {
-    const [isVisible, setIsVisible] = useState(false);
-  
-    const toggleDialog = (visible: boolean) => {
-      setIsVisible(visible);
-    };
-  
-    return (
-      <>
+  const [isVisible, setIsVisible] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleDialog = (visible: boolean) => {
+    setIsVisible(visible);
+  };
+
+  const handleDrawerOpen = () => {
+    setIsOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setIsOpen(false);
+  };
+
+  return (
+    <AppContainer isOpen={isOpen}>
+      <Drawer
+        variant="persistent"
+        anchor="left"
+        open={isOpen}
+        onClose={handleDrawerClose}
+        sx={{ '& .MuiDrawer-paper': { backgroundColor: '#151619' } }} // Set drawer background color to black
+       
+      >
+        {DrawerList}
+      </Drawer>
+      <div>
         <NavbarContainer>
           <NavbarContentsLeft>
             <MenuContainer>
-              <Menu><img src={menu} alt="menu" /></Menu>
+              <Menu onClick={isOpen ? handleDrawerClose : handleDrawerOpen}>
+                {isOpen ? <img src={cancel} alt="cancel" /> : <img src={menu} alt="menu" />}
+              </Menu>
             </MenuContainer>
             <NavbarTitle>MARKDOWN</NavbarTitle>
             <Divider />
@@ -142,7 +179,7 @@ function Navbar() {
               <TextInput />
             </TextInputContainer>
           </NavbarContentsLeft>
-  
+
           <NavbarContentsRight>
             <TrashButton onClick={() => toggleDialog(true)}>
               <img src={trashIcon} alt="trash" />
@@ -154,8 +191,9 @@ function Navbar() {
           </NavbarContentsRight>
         </NavbarContainer>
         <TrashDialog isVisible={isVisible} toggleDialog={toggleDialog} />
-      </>
-    );
-  }
-  
-  export default Navbar;
+      </div>
+    </AppContainer>
+  );
+}
+
+export default Navbar;

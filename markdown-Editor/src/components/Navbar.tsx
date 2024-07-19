@@ -3,13 +3,12 @@ import menu from '../assets/icon-menu.svg';
 import documentIcon from '../assets/icon-document.svg';
 import trashIcon from '../assets/icon-delete.svg';
 import saveIcon from '../assets/icon-save.svg';
-import TrashDialog from './TrashDialog';
+import {TrashDialog} from './TrashDialog';
 import { useState } from 'react';
 import cancel from '../assets/icon-close.svg';
-import Drawer from '@mui/material/Drawer';
-import DrawerList from './DrawerList';
+import MenuDrawer from './Drawer';
+import { useDisclosure } from '@chakra-ui/react';
 
-const drawerWidth = 240; // Width of the drawer
 
 interface AppContainerProps {
   isOpen: boolean;
@@ -17,8 +16,8 @@ interface AppContainerProps {
 
 const AppContainer = styled.div<AppContainerProps>`
   display: grid;
-  grid-template-columns: ${props => (props.isOpen ? `${drawerWidth}px 1fr` : `0 1fr`)};
-  transition: grid-template-columns 0.3s; /* Smooth transition for grid change */
+  grid-template-columns: ${props => (props.isOpen ? `auto 1fr` : `0 1fr`)};
+  transition: grid-template-columns ;0.3s; /* Smooth transition for grid change */
   height: 100vh; /* Full height to cover the viewport */
 `;
 
@@ -137,37 +136,23 @@ const TrashButton = styled.button`
 
 function Navbar() {
   const [isVisible, setIsVisible] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
 
   const toggleDialog = (visible: boolean) => {
     setIsVisible(visible);
   };
 
-  const handleDrawerOpen = () => {
-    setIsOpen(true);
-  };
 
-  const handleDrawerClose = () => {
-    setIsOpen(false);
-  };
+  const {isOpen, onToggle, onClose} = useDisclosure();
 
   return (
     <AppContainer isOpen={isOpen}>
-      <Drawer
-        variant="persistent"
-        anchor="left"
-        open={isOpen}
-        onClose={handleDrawerClose}
-        sx={{ '& .MuiDrawer-paper': { backgroundColor: '#151619' } }} // Set drawer background color to black
-       
-      >
-        {DrawerList}
-      </Drawer>
-      <div>
+      <MenuDrawer isOpen={isOpen}/>
+    
         <NavbarContainer>
           <NavbarContentsLeft>
             <MenuContainer>
-              <Menu onClick={isOpen ? handleDrawerClose : handleDrawerOpen}>
+              <Menu onClick={onToggle} >
                 {isOpen ? <img src={cancel} alt="cancel" /> : <img src={menu} alt="menu" />}
               </Menu>
             </MenuContainer>
@@ -191,7 +176,7 @@ function Navbar() {
           </NavbarContentsRight>
         </NavbarContainer>
         <TrashDialog isVisible={isVisible} toggleDialog={toggleDialog} />
-      </div>
+     
     </AppContainer>
   );
 }

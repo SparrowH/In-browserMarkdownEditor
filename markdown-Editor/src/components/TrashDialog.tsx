@@ -1,80 +1,95 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+} from '@chakra-ui/react';
 import styled from 'styled-components';
-
-const CustomDialog = styled(Dialog)`
-  & .MuiDialog-paper {
-    background-color: #fff;
-    width: 343px;
-    height: 200px;
-  }
-`;
-
-const CustomDialogContent = styled(DialogContent)`
-  justify-content: center;
-  height: 20px;
-`;
+import { useRef } from 'react';
 
 const CustomButton = styled.button`
   width: 295px;
   height: 40px;
-  background-color: #E46643 !important;
-  color: #fff !important;
-  font-size: 15px !important;
-  font-family: "Roboto", sans-serif !important;
-  border: none;
+  background-color: #E46643;
+  color: white;
   cursor: pointer;
-  margin-bottom: 10px;
+  border-radius: 4px;
+  &:hover {
+    background-color: #D45E3E;
+  },
+
+  margin-top: 0px !important;
+  padding-top: 0px !important;
 
 `;
 
-const CustomDialogActions = styled(DialogActions)`
+const CustomAlertDialogContent = styled(AlertDialogContent)`
+  width: 343px !important;
+  height: 218px;
+  
+`;
+
+const CustomAlertDialogHeader = styled(AlertDialogHeader)`
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0px !important;
+  padding-bottom: 8px !important;
+`;
+
+const CustomAlertDialogBody = styled(AlertDialogBody)`
+margin-top: 0px !important;
+padding-top: 0px !important;
+padding-top: 0px !important;
+padding-bottom: 10px !important;
+`;
+
+const CustomAlertDialogFooter = styled(AlertDialogFooter)`
   display: flex;
-  justify-content: center !important;
-  align-items: center !important;
+  justify-content: center;
 `;
 
-const CustomDialogContentText = styled(DialogContentText)`
-  font-size: 14px !important;
-  font-family: "Roboto", sans-serif !important;
+const CustomTextBody = styled.p`
+  color: #7C8187;
+  font-size: 15px;
+  line-height: 1.7;
+  line-spacing: 1.9px;
+
 `
 
 interface TrashDialogProps {
   isVisible: boolean;
-  toggleDialog: (visible: boolean) => void;
+  toggleDialog: () => void;
 }
 
-export default function TrashDialog({ isVisible, toggleDialog }: TrashDialogProps) {
-  const handleClose = () => {
-    toggleDialog(false);
-  };
-
+export function TrashDialog({ isVisible, toggleDialog }: TrashDialogProps) {
+  const cancelRef = useRef<HTMLButtonElement>(null);
 
   return (
-    <React.Fragment>
-      <CustomDialog
-        open={isVisible}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"Delete this document?"}
-        </DialogTitle>
-        <CustomDialogContent>
-          <CustomDialogContentText id="alert-dialog-description">
-            Are you sure you want to delete the<br/> ‘welcome.md’ document and its contents?<br/> This action cannot be reversed.
-          </CustomDialogContentText>
-        </CustomDialogContent>
-        <CustomDialogActions>
-          <CustomButton onClick={handleClose}>Delete & Confirm</CustomButton>
-        </CustomDialogActions>
-      </CustomDialog>
-    </React.Fragment>
+    <AlertDialog
+      isOpen={isVisible}
+      leastDestructiveRef={cancelRef}
+      onClose={toggleDialog}
+      isCentered
+    >
+      <AlertDialogOverlay>
+        <CustomAlertDialogContent>
+          <CustomAlertDialogHeader>
+            Delete this document?
+          </CustomAlertDialogHeader>
+          <CustomAlertDialogBody>
+            <CustomTextBody>
+            Are you sure you want to delete the ‘welcome.md’ document and its contents? <br/>This action cannot be reversed.
+            </CustomTextBody>  
+          </CustomAlertDialogBody>
+          <CustomAlertDialogFooter>
+            <CustomButton ref={cancelRef} onClick={toggleDialog}>
+              Confirm&Delete
+            </CustomButton>
+          </CustomAlertDialogFooter>
+        </CustomAlertDialogContent>
+      </AlertDialogOverlay>
+    </AlertDialog>
   );
 }
